@@ -98,7 +98,7 @@ public class UserAuthController {
         // CHECK FOR RESULT SET:
         if (result != 1) {
             return new ResponseEntity("Something went wrong", HttpStatus.BAD_REQUEST);
-            // Returns an error response if the user could not be registered.
+            // Returns an error response if the user could not be registered.//
         }
         // END OF CHECK FOR RESULT SET.
 
