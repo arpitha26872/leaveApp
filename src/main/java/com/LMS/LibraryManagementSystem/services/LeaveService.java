@@ -26,10 +26,10 @@ public class LeaveService {
         Leave leave = new Leave();
         leave.setEmployee(employee);
         leave.setManager(null);
-        leave.setLeave_reason(reason);
-        leave.setLeave_start_date(startDate);
-        leave.setLeave_end_date(endDate);
-        leave.setLeave_status(LeaveStatus.PENDING);
+        leave.setLeaveReason(reason);
+        leave.setLeaveStartDate(startDate);
+        leave.setLeaveEndDate(endDate);
+        leave.setLeaveStatus(LeaveStatus.PENDING);
 
         return leaveRepository.save(leave);  // ←🔥 This is where the leave is added (inserted)
     }
@@ -38,6 +38,10 @@ public class LeaveService {
         User employee = userRepository.findById(employeeId)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
         return leaveRepository.findByEmployee(employee);
+    }
+
+    public List<Leave> getLeaveByStatus(LeaveStatus leaveStatus) {
+        return leaveRepository.findByLeaveStatus(leaveStatus);
     }
 }
 

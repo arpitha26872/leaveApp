@@ -12,18 +12,18 @@ public class Leave {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int leave_id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_id")
     private User employee;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "manager_id")
     private User manager;
 
-    private String leave_reason;
-    private LocalDate leave_start_date;
-    private LocalDate leave_end_date;
-    private LeaveStatus leave_status;
+    private String leaveReason;
+    private LocalDate leaveStartDate;
+    private LocalDate leaveEndDate;
+    private LeaveStatus leaveStatus;
 
     public Leave() {
     }
@@ -32,10 +32,10 @@ public class Leave {
         this.leave_id = leave_id;
         this.employee = employee;
         this.manager = manager;
-        this.leave_reason = leave_reason;
-        this.leave_start_date = leave_start_date;
-        this.leave_end_date = leave_end_date;
-        this.leave_status = leave_status;
+        this.leaveReason = leave_reason;
+        this.leaveStartDate = leave_start_date;
+        this.leaveEndDate = leave_end_date;
+        this.leaveStatus = leave_status;
     }
 
     public int getLeave_id() {
@@ -58,35 +58,35 @@ public class Leave {
         this.manager = manager;
     }
 
-    public String getLeave_reason() {
-        return leave_reason;
+    public String getLeaveReason() {
+        return leaveReason;
     }
 
-    public void setLeave_reason(String leave_reason) {
-        this.leave_reason = leave_reason;
+    public void setLeaveReason(String leaveReason) {
+        this.leaveReason = leaveReason;
     }
 
-    public LocalDate getLeave_start_date() {
-        return leave_start_date;
+    public LocalDate getLeaveStartDate() {
+        return leaveStartDate;
     }
 
-    public void setLeave_start_date(String leave_start_date) {
-        this.leave_start_date = LocalDate.parse(leave_start_date);
+    public void setLeaveStartDate(String leaveStartDate) {
+        this.leaveStartDate = LocalDate.parse(leaveStartDate);
     }
 
-    public LocalDate getLeave_end_date() {
-        return leave_end_date;
+    public LocalDate getLeaveEndDate() {
+        return leaveEndDate;
     }
 
-    public void setLeave_end_date(String leave_end_date) {
-        this.leave_end_date = LocalDate.parse(leave_end_date);
+    public void setLeaveEndDate(String leaveEndDate) {
+        this.leaveEndDate = LocalDate.parse(leaveEndDate);
     }
 
-    public LeaveStatus getLeave_status() {
-        return leave_status;
+    public LeaveStatus getLeaveStatus() {
+        return leaveStatus;
     }
 
-    public void setLeave_status(LeaveStatus leave_status) {
-        this.leave_status = leave_status;
+    public void setLeaveStatus(LeaveStatus leaveStatus) {
+        this.leaveStatus = leaveStatus;
     }
 }
