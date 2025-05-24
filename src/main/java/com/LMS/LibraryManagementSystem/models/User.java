@@ -19,16 +19,28 @@ public class User {
     private long phone_number;
     private String password;
 
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime created_at = LocalDateTime.now();  // Automatically set on creation
-
     @Enumerated(EnumType.STRING)
-    private Role role = Role.USER; // Default role set to USER
+    private Role role = Role.EMPLOYEE; // Default role set to USER
 
-    @PrePersist
-    protected void onCreate() {
-        this.created_at = LocalDateTime.now();
+    public User() {}
+
+    public User(String first_name, String last_name, String email, long phone_number, String password, Role role) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.email = email;
+        this.phone_number = phone_number;
+        this.password = password;
+        this.role = role;
+    }
+
+    public User(int user_id, String first_name, String last_name, String email, long phone_number, String password, Role role) {
+        this.user_id = user_id;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.email = email;
+        this.phone_number = phone_number;
+        this.password = password;
+        this.role = role;
     }
 
     /**
@@ -36,6 +48,7 @@ public class User {
      *  GETTERS AND SETTERS:
      * -------------------------------------
      * */
+
 
 
     public long getPhone_number() {
@@ -84,14 +97,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public LocalDateTime getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
     }
 
     public Role getRole() {

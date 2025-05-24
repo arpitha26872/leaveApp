@@ -39,9 +39,9 @@ public class SecurityConfig {
                 // Disables CSRF protection (not required for JWT-based stateless authentication).
 
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/user/auth/**").permitAll()
+                .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/api/v1/admin/auth/**").hasAuthority(Role.ADMIN.toString())
-                .requestMatchers("api/v1/test/user").hasAuthority(Role.USER.toString())
+                .requestMatchers("api/v1/test/user").hasAuthority(Role.EMPLOYEE.toString())
                 .requestMatchers("api/v1/test/admin").hasAuthority(Role.ADMIN.toString())
                 // Publicly accessible endpoints for authentication and general information.
 
@@ -81,6 +81,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        System.out.println("done");
         return configuration.getAuthenticationManager();
     }
     // END OF AUTHENTICATION MANAGER METHOD.

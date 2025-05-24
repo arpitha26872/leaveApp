@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/user/auth") // Base path for all endpoints in this controller.
+@RequestMapping("auth") // Base path for all endpoints in this controller.
 public class UserAuthController {
 
     @Autowired
@@ -49,6 +49,8 @@ public class UserAuthController {
         // The above line authenticates the user by checking the email and password.
         // If successful, it returns an authenticated `Authentication` object; otherwise, it throws an exception.
 
+        System.out.println("done");
+
         // SET USER OBJECT:
         MyCustomUserDetails userDetails =
                 (MyCustomUserDetails) myCustomUserDetailService.loadUserByUsername(loginRequest.getEmail());
@@ -66,47 +68,13 @@ public class UserAuthController {
         AuthResponse response = new AuthResponse(token, userDetails);
         // Constructs a response object containing the token and user details.
 
+        System.out.println(token);
+
         // RETURN RESPONSE:
         return new ResponseEntity(response, HttpStatus.ACCEPTED);
         // Returns the response with HTTP status 202 (Accepted).
     }
     // END OF USER SIGN IN POST METHOD.
-
-    @PostMapping("/register")
-    public ResponseEntity signUp(@RequestParam("first_name") String firstName,
-                                 @RequestParam("last_name") String lastName,
-                                 @RequestParam("email") String email,
-                                 @RequestParam("phone_number") long phoneNumber,
-                                 @RequestParam("password") String password) {
-
-        // This step should verify if the email is already registered. Implementation of this logic is not shown here.
-        if (userService.doesWithEmailExist(email)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Email already exists");
-        }
-
-        // HASH PASSWORD:
-        String hashed_password = passwordEncoder.encode(password);
-        // Hashes the user's password using a secure algorithm (e.g., bcrypt) before storing it in the database.
-        System.out.println(firstName + " " + lastName + " " + email + " " + hashed_password);
-
-        // STORE USER:
-        int result = userService.signUpUser(firstName, lastName, email, hashed_password, Role.USER.toString(),phoneNumber);
-        // Calls the `userService` to save the user's details in the database.
-        // Returns `1` if successful or some other value if there's an issue.
-
-        // CHECK FOR RESULT SET:
-        if (result != 1) {
-            return new ResponseEntity("Something went wrong", HttpStatus.BAD_REQUEST);
-            // Returns an error response if the user could not be registered.//
-        }
-        // END OF CHECK FOR RESULT SET.
-
-        // RETURN SUCCESS RESPONSE:
-        return new ResponseEntity("User Sign Up Successful!", HttpStatus.CREATED);
-        // Returns a success message with HTTP status 201 (Created) if the registration is successful.
-    }
-    // END OF USER SIGN UP POST METHOD.
 
     @PostMapping("/is_token_expired")
     public ResponseEntity checkTokenExpiry(@RequestParam("token") String token) {

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LMS | Login</title>
+    <style>
+        body{font-family:sans-serif;display:flex;flex-direction:column;align-items:center;margin-top:4rem}
+        form{display:flex;flex-direction:column;gap:0.75rem;width:260px}
+        input,button{padding:0.5rem;font-size:1rem}
+        #err {color:red;display:none}
+    </style>
+</head>
+<body>
+
+<h2>Library Management System – Sign in</h2>
+
+<form id="loginForm">
+    <input  id="email"    type="email"    placeholder="Email"    required />
+    <input  id="password" type="password" placeholder="Password" required />
+    <button type="submit">Log in</button>
+    <p id="err"></p>
+</form>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const payload = {
+            email:    document.getElementById('email').value,
+            password: document.getElementById('password').value
+        };
+
+        try {
+            const res = await fetch('/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+                const msg = await res.text();
+                showError(msg || `Error ${res.status}`);
+                return;
+            }
+
+            const { token } = await res.json();               // AuthResponse.token
+            localStorage.setItem('jwt', token);               // 🔑 save it for later API calls
+            window.location.href = '/home';                   // 👉 change to whichever page you want
+        } catch (err) {
+            showError('Network error – please try again');
+        }
+    });
+
+    function showError(text) {
+        const p = document.getElementById('err');
+        p.textContent = text;
+        p.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>

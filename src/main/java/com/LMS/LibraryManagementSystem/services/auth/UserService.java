@@ -22,7 +22,14 @@ public class UserService {
      * @return A `User` object with the details of the user corresponding to the email.
      */
     public User loadUserByEmail(String email) {
-        return userRepository.getUserByEmail(email);
+            System.out.println("Trying to load user by email: " + email);
+            User user = userRepository.findByEmail(email);
+            if (user == null) {
+                System.out.println("No user found with email: " + email);
+            } else {
+                System.out.println("User found: " + user.getEmail());
+            }
+            return user;
         // Calls the repository method `getUserByEmail` to fetch the user details.
     }
     // END OF LOAD USER BY EMAIL.
@@ -63,7 +70,9 @@ public class UserService {
     }// END OF CHECK IF USER WITH EMAIL AND PASSWORD EXISTS.
 
     public String getPasswordByEmail(String email) {
-        return userRepository.getPasswordByEmail(email);
+        String hashedPassword = userRepository.getPasswordByEmail(email);
+                System.out.println("Stored hashed password: " + hashedPassword);
+        return hashedPassword;
     }// END OF GET PASSWORD BY EMAIL
 }
 // END OF USER SERVICE CLASS.

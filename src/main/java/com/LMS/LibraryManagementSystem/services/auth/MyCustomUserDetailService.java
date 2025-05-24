@@ -2,6 +2,7 @@ package com.LMS.LibraryManagementSystem.services.auth;
 
 import com.LMS.LibraryManagementSystem.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,18 +23,27 @@ public class MyCustomUserDetailService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Fetch the user from the database using the email as the identifier.
-        User user = userService.loadUserByEmail(username);
+        try {
+            System.out.println("Trying to load user by email: " + username);
 
-        // Check if the user exists:
-        if (user == null) {
-            throw new UsernameNotFoundException("Unable To Load User");
-            // Throw an exception if the user is not found.
+            // Fetch the user from the database using the email as the identifier
+            User user = userService.loadUserByEmail(username);
+
+            if (user == null) {
+                System.err.println("User not found with email: " + username);
+                throw new UsernameNotFoundException("User not found with email: " + username);
+            }
+
+            return new MyCustomUserDetails(user);
+        } catch (UsernameNotFoundException e) {
+            throw e; // rethrow so Spring Security can handle it properly
+        } catch (Exception e) {
+            // Log unexpected errors and wrap them in InternalAuthenticationServiceException
+            System.err.println("Unexpected error in loadUserByUsername: " + e.getMessage());
+            e.printStackTrace();
+            throw new InternalAuthenticationServiceException("Unexpected error occurred while loading user", e);
         }
-
-        // Return a custom `UserDetails` object with user data for Spring Security.
-        return new MyCustomUserDetails(user);
     }
-    // END OF LOAD USER BY USERNAME METHOD.
+
 }
 // END OF MY CUSTOM USER DETAILS SERVICE CLASS.
