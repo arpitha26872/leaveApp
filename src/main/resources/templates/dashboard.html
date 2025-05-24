@@ -25,7 +25,7 @@
 
 <div class="dashboard-container">
 
-    <!-- EXISTING LEAVE REQUESTS -------------------------------------------------->
+    <!-- CURRENT REQUESTS -------------------------------------------------->
     <div class="section">
         <h3>Current Leave Requests</h3>
         <table id="leaveTable">
@@ -34,23 +34,26 @@
                 <th>Leave Reason</th><th>Start Date</th><th>End Date</th><th>Status</th>
             </tr>
             </thead>
-            <tbody><!-- rows inserted here --></tbody>
+            <tbody></tbody>
         </table>
     </div>
 
-    <!-- NEW LEAVE REQUEST FORM -------------------------------------------------->
+    <!-- MAKE NEW REQUEST -------------------------------------------------->
     <div class="section">
         <h3>Make Leave Request</h3>
 
         <form id="leaveRequestForm">
-            <label for="leaveType">Leave Reason:</label><br>
-            <input id="leaveType" type="text" placeholder="e.g. Sick, Vacation" required><br><br>
+            <label>Leave Reason:<br>
+                <input id="leaveType" type="text" placeholder="e.g. Sick, Vacation" required>
+            </label><br>
 
-            <label for="startDate">Start Date:</label><br>
-            <input id="startDate" type="date" required><br><br>
+            <label>Start Date:<br>
+                <input id="startDate" type="date" required>
+            </label><br>
 
-            <label for="endDate">End Date:</label><br>
-            <input id="endDate" type="date" required><br><br>
+            <label>End Date:<br>
+                <input id="endDate" type="date" required>
+            </label><br>
 
             <button type="submit">Submit Request</button>
         </form>
@@ -60,58 +63,50 @@
 </div>
 
 <script>
-    /* ---------- helpers ---------- */
-    const token = localStorage.getItem('jwt');
+    /* helpers */
+    const token   = localStorage.getItem('jwt');
     const apiBase = 'http://localhost:8081';
 
-    /* add a row to the table */
-    function addLeaveRow({ leave_reason, leave_start_date, leave_end_date, leave_status }) {
+    if (!token) { alert('Please log in first'); window.location.href = '/pages/login'; }
+
+    /* insert one row */
+    function addLeaveRow({ leaveReason, leaveStartDate, leaveEndDate, leaveStatus }) {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${leave_reason}</td>
-        <td>${leave_start_date}</td>
-        <td>${leave_end_date}</td>
-        <td>${leave_status}</td>`;
+        <td>${leaveReason}</td>
+        <td>${leaveStartDate}</td>
+        <td>${leaveEndDate}</td>
+        <td>${leaveStatus}</td>`;
       document.querySelector('#leaveTable tbody').appendChild(tr);
     }
 
-    /* ---------- load existing leaves on page load ---------- */
+    /* load existing */
     async function loadMyLeaves() {
-      if (!token) {
-        alert('Please log in first.'); window.location.href = '/pages/login'; return;
-      }
       try {
-        const res = await fetch(`${apiBase}/user/myLeaveRequests`, {
-          method: 'GET',
+        const res   = await fetch(`${apiBase}/user/myLeaveRequests`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-
-        if (!res.ok) {
-          console.error('Failed to load leaves:', res.status);
-          return;
-        }
-        const leaves = await res.json(); // expecting array
-        leaves.forEach(addLeaveRow);
+        if (!res.ok) throw new Error(await res.text());
+        const list = await res.json();
+        document.querySelector('#leaveTable tbody').innerHTML = '';
+        list.forEach(addLeaveRow);
       } catch (err) {
-        console.error('Error fetching leaves:', err);
+        console.error('Could not load leaves:', err.message);
       }
     }
 
-    /* ---------- submit new leave ---------- */
-    document.getElementById('leaveRequestForm').addEventListener('submit', async function (e) {
+    /* submit new */
+    document.getElementById('leaveRequestForm').addEventListener('submit', async e => {
       e.preventDefault();
-
-      const leaveType = document.getElementById('leaveType').value.trim();
-      const startDate = document.getElementById('startDate').value;
-      const endDate   = document.getElementById('endDate').value;
+      const leaveType = document.getElementById('leaveType').value.trim(),
+            startDate = document.getElementById('startDate').value,
+            endDate   = document.getElementById('endDate').value;
 
       if (!leaveType || !startDate || !endDate) { alert('Fill all fields'); return; }
 
-      if (!token) { alert('Please log in first.'); window.location.href='/pages/login'; return; }
-
       try {
         const res = await fetch(`${apiBase}/user/request`, {
-          method: 'POST',
+          method : 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': `Bearer ${token}`
@@ -119,32 +114,31 @@
           body: new URLSearchParams({ reason: leaveType, startDate, endDate })
         });
 
-        if (res.ok) {
-          const leave = await res.json();       // backend returns saved Leave
-          addLeaveRow(leave);                   // show immediately in table
-          const msg = document.getElementById('requestMessage');
-          msg.textContent = 'Leave request submitted!';
-          msg.style.display = 'block';
-          this.reset();
-        } else if (res.status === 401) {
-          alert('Session expired – log in again.');
-          window.location.href = '/pages/login';
-        } else {
-          const text = await res.text();
-          alert('Request failed: ' + text);
+        if (!res.ok) {
+          if (res.status === 401) { alert('Session expired'); window.location.href = '/pages/login'; }
+          else                     { alert('Request failed: ' + await res.text()); }
+          return;
         }
+
+        const saved = await res.json();     // newly-created Leave
+        addLeaveRow(saved);                 // show instantly
+        const msg = document.getElementById('requestMessage');
+        msg.textContent = 'Leave request submitted!';
+        msg.style.display = 'block';
+        e.target.reset();
       } catch (err) {
-        console.error('Error submitting request:', err);
         alert('Network error submitting request.');
+        console.error(err);
       }
     });
 
-    /* run on page load */
+    /* initial load */
     loadMyLeaves();
 </script>
 
 </body>
 </html>
+
 
 
 

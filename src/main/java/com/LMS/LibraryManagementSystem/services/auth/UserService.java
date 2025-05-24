@@ -1,9 +1,9 @@
 package com.LMS.LibraryManagementSystem.services.auth;
 
+import com.LMS.LibraryManagementSystem.enums.Role;
 import com.LMS.LibraryManagementSystem.models.User;
 import com.LMS.LibraryManagementSystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -77,6 +77,10 @@ public class UserService {
 
     public boolean doesWithPhoneNumberExist(long phoneNumber) {
         return userRepository.existsByPhoneNumber(phoneNumber);
+    }
+
+    public List<User> getAllUsers(Role role) {
+        return userRepository.getByRole(role);
     }
 }
 // END OF USER SERVICE CLASS.

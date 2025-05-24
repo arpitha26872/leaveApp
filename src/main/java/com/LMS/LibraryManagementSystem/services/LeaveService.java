@@ -61,5 +61,9 @@ public class LeaveService {
     public List<Leave> getRejectedLeaves() {
         return leaveRepository.findByLeaveStatus(LeaveStatus.REJECTED);
     }
+
+    public List<Leave> getEmployeeOnLeave() {
+        return leaveRepository.findEmployeesOnLeave();
+    }
 }
 
