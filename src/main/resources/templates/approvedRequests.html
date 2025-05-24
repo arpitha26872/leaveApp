@@ -23,50 +23,53 @@
         <th>Reason</th>
         <th>Start</th>
         <th>End</th>
+        <th>Approved By</th>
     </tr>
     </thead>
-    <tbody><!-- rows will be injected here --></tbody>
+    <tbody></tbody>
 </table>
 
 <p id="msg" style="font-weight:bold;"></p>
 
 <script>
-    const apiBase = 'http://localhost:8081'; // Adjust if needed
+    const apiBase = 'http://localhost:8081';
     const token = localStorage.getItem('jwt');
     if (!token) {
-        alert('Please login');
-        window.location.href = '/';
+      alert('Please login');
+      window.location.href = '/';
     }
 
     async function loadApproved() {
-        try {
-            const res = await fetch(`${apiBase}/admin/approvedLeaves`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!res.ok) throw new Error(await res.text());
+      try {
+        const res = await fetch(`${apiBase}/admin/approvedLeaves`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error(await res.text());
 
-            const leaves = await res.json();
-            const tbody = document.querySelector('#approvedTable tbody');
-            tbody.innerHTML = '';
+        const leaves = await res.json();
+        const tbody = document.querySelector('#approvedTable tbody');
+        tbody.innerHTML = '';
 
-            leaves.forEach(l => {
-                const empName = l.employee?.first_name ? `${l.employee.first_name} ${l.employee.last_name}` : 'N/A';
+        leaves.forEach(l => {
+          const empName = l.employee?.first_name ? `${l.employee.first_name} ${l.employee.last_name}` : 'N/A';
+          const mgrName = l.manager?.first_name ? `${l.manager.first_name} ${l.manager.last_name}` : 'N/A';
 
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${l.leave_id}</td>
-                    <td>${empName}</td>
-                    <td>${l.leaveReason}</td>
-                    <td>${l.leaveStartDate}</td>
-                    <td>${l.leaveEndDate}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        } catch (err) {
-            const msg = document.getElementById('msg');
-            msg.textContent = 'Error loading approved leaves: ' + err.message;
-            msg.style.color = 'red';
-        }
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${l.leave_id}</td>
+            <td>${empName}</td>
+            <td>${l.leaveReason}</td>
+            <td>${l.leaveStartDate}</td>
+            <td>${l.leaveEndDate}</td>
+            <td>${mgrName}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        const msg = document.getElementById('msg');
+        msg.textContent = 'Error loading approved leaves: ' + err.message;
+        msg.style.color = 'red';
+      }
     }
 
     loadApproved();
@@ -74,3 +77,4 @@
 
 </body>
 </html>
+
