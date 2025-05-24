@@ -45,7 +45,7 @@
 
             const { token } = await res.json();               // AuthResponse.token
             localStorage.setItem('jwt', token);               // 🔑 save it for later API calls
-            window.location.href = '/home';                   // 👉 change to whichever page you want
+            window.location.href = '/dashboard';                   // 👉 change to whichever page you want
         } catch (err) {
             showError('Network error – please try again');
         }
