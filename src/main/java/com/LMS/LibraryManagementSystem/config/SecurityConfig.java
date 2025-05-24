@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/pages/**").permitAll()
                 .requestMatchers("/user/**").hasAnyAuthority(Role.ADMIN.toString(), Role.EMPLOYEE.toString())
-                .requestMatchers("admin/auth/**").hasAuthority(Role.ADMIN.toString())
+                .requestMatchers("admin/**").hasAuthority(Role.ADMIN.toString())
                 .requestMatchers("test/user").hasAuthority(Role.EMPLOYEE.toString())
                 .requestMatchers("test/admin").hasAuthority(Role.ADMIN.toString())
                 // Publicly accessible endpoints for authentication and general information.

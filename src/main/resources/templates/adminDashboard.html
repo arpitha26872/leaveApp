@@ -1,10 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    .dashboard-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .dashboard-buttons button {
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .dashboard-buttons button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
 
+<h2>Admin Dashboard</h2>
+
+<div class="dashboard-buttons">
+  <button onclick="location.href='/pages/addEmployee'">Add Employee</button>
+  <button onclick="location.href='/pages/approvedRequests'">Approved Requests</button>
+  <button onclick="location.href='/pages/rejectedRequests'">Rejected Requests</button>
+  <button onclick="location.href='/pages/pendingRequests'">Pending Requests</button>
+  <button onclick="location.href='/pages/onLeaveEmployees'">Employees on Leave</button>
+</div>
+
 </body>
 </html>
+

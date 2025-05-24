@@ -4,28 +4,10 @@
     <meta charset="UTF-8" />
     <title>LMS | Login</title>
     <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 4rem;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            width: 260px;
-        }
-        input,
-        button {
-            padding: 0.5rem;
-            font-size: 1rem;
-        }
-        #err {
-            color: red;
-            display: none;
-        }
+        body{font-family:sans-serif;display:flex;flex-direction:column;align-items:center;margin-top:4rem}
+        form{display:flex;flex-direction:column;gap:.75rem;width:260px}
+        input,button{padding:.5rem;font-size:1rem}
+        #err{color:red;display:none}
     </style>
 </head>
 <body>
@@ -33,66 +15,70 @@
 <h2>Library Management System – Sign in</h2>
 
 <form id="loginForm">
-    <input id="email" type="email" placeholder="Email" required />
+    <input id="email"    type="email"    placeholder="Email"    required />
     <input id="password" type="password" placeholder="Password" required />
     <button type="submit">Log in</button>
     <p id="err"></p>
 </form>
 
 <script>
-    // Redirect if token already exists
-    const token = localStorage.getItem('jwt');
-    if (token) {
-        // Optionally, verify token validity here before redirecting
+    /* -------- helper to route by role -------- */
+    function goToDashboard(role){
+      if(role === 'ADMIN'){
+        window.location.href = '/pages/adminDashboard';
+      }else{
         window.location.href = '/pages/dashboard';
+      }
     }
 
-    const form = document.getElementById('loginForm');
-    const errElem = document.getElementById('err');
+    /* -------- auto-redirect if already logged in -------- */
+    const savedToken = localStorage.getItem('jwt');
+    const savedRole  = localStorage.getItem('role');
+    if (savedToken && savedRole){
+      goToDashboard(savedRole);
+    }
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    /* -------- login submit -------- */
+    document.getElementById('loginForm').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const err = document.getElementById('err');
+      err.style.display = 'none';
 
-        errElem.style.display = 'none';
+      const payload = {
+        email   : document.getElementById('email').value,
+        password: document.getElementById('password').value
+      };
 
-        const payload = {
-            email: document.getElementById('email').value,
-            password: document.getElementById('password').value
-        };
+      try{
+        const res = await fetch('/auth/login',{
+          method : 'POST',
+          headers: { 'Content-Type':'application/json' },
+          body   : JSON.stringify(payload)
+        });
 
-        try {
-            // Login request
-            const res = await fetch('/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (!res.ok) {
-                const msg = await res.text();
-                showError(msg || `Error ${res.status}`);
-                return;
-            }
-
-            const { token } = await res.json();
-            localStorage.setItem('jwt', token);
-
-            // Redirect directly to dashboard page (instead of fetching HTML here)
-            window.location.href = '/pages/dashboard';
-
-        } catch (err) {
-            showError('Network error – please try again');
+        if(!res.ok){
+          const msg = await res.text();
+          err.textContent = msg || `Error ${res.status}`;
+          err.style.display = 'block';
+          return;
         }
-    });
 
-    function showError(text) {
-        errElem.textContent = text;
-        errElem.style.display = 'block';
-    }
+        const data = await res.json();   // { token, role, ... }
+        localStorage.setItem('jwt' , data.token);
+        localStorage.setItem('role', data.role);
+
+        goToDashboard(data.role);
+
+      }catch(ex){
+        err.textContent = 'Network error – please try again';
+        err.style.display = 'block';
+      }
+    });
 </script>
 
 </body>
 </html>
+
 
 
 

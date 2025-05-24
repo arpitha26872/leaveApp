@@ -46,5 +46,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     // Query to get password by email
     @Query(value = "SELECT password FROM users WHERE email = :email", nativeQuery = true)
     String getPasswordByEmail(@Param("email") String email);
+
+    boolean existsByPhoneNumber(long phoneNumber);
 }
 // END OF USER REPOSITORY INTERFACE.

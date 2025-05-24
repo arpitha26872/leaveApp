@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Employee</title>
+  <style>
+    body{font-family:Arial,sans-serif;margin:2rem;background:#f9f9f9}
+    h2{color:#333}
+    form{background:#fff;padding:2rem;border-radius:8px;box-shadow:0 0 8px rgba(0,0,0,.1);max-width:400px}
+    label{display:block;margin-top:1rem}
+    input{width:100%;padding:.5rem;margin-top:.25rem;border:1px solid #ccc;border-radius:4px}
+    button{margin-top:1.5rem;padding:.6rem 1rem;background:#007bff;color:#fff;border:none;border-radius:4px;cursor:pointer}
+    button:hover{background:#0056b3}
+    #msg{margin-top:1rem;font-weight:bold}
+  </style>
+</head>
+<body>
+
+<h2>Add New Employee</h2>
+
+<form id="addEmployeeForm">
+  <label for="first_name">First Name</label>
+  <input type="text" id="first_name" name="first_name" required>
+
+  <label for="last_name">Last Name</label>
+  <input type="text" id="last_name" name="last_name" required>
+
+  <label for="email">Email</label>
+  <input type="email" id="email" name="email" required>
+
+  <label for="phone_number">Phone Number</label>
+  <input type="tel" id="phone_number" name="phone_number" required>
+
+  <label for="password">Password</label>
+  <input type="password" id="password" name="password" required>
+
+  <button type="submit">Register Employee</button>
+  <p id="msg"></p>
+</form>
+
+<script>
+  document.getElementById('addEmployeeForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    const params   = new URLSearchParams(formData);
+
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+      alert('Unauthorized: Please login again.');
+      window.location.href = '/';
+      return;
+    }
+
+    try {
+      const res  = await fetch('/admin/register/employee', {
+        method : 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Bearer ${token}`
+        },
+        body: params
+      });
+
+      const text = await res.text();
+      const msg  = document.getElementById('msg');
+      msg.textContent = text;
+      msg.style.color = res.ok ? 'green' : 'red';
+
+      if (res.ok) {
+        this.reset();
+        // Small delay so admin sees success message, then redirect
+        setTimeout(()=>window.location.href='/pages/adminDashboard', 1200);
+      }
+
+    } catch (err) {
+      const msg = document.getElementById('msg');
+      msg.textContent = 'Network error';
+      msg.style.color = 'red';
+    }
+  });
+</script>
+
+</body>
+</html>
+

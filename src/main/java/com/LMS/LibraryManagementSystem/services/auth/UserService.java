@@ -74,5 +74,9 @@ public class UserService {
                 System.out.println("Stored hashed password: " + hashedPassword);
         return hashedPassword;
     }// END OF GET PASSWORD BY EMAIL
+
+    public boolean doesWithPhoneNumberExist(long phoneNumber) {
+        return userRepository.existsByPhoneNumber(phoneNumber);
+    }
 }
 // END OF USER SERVICE CLASS.

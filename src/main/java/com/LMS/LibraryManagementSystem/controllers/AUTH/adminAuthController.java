@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("admin/auth")
+@RequestMapping("admin")
 public class adminAuthController {
 
     @Autowired
@@ -82,6 +82,11 @@ public class adminAuthController {
         if (userService.doesWithEmailExist(email)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Email already exists");
+        }
+
+        if (userService.doesWithPhoneNumberExist(phoneNumber)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Phone number already exists");
         }
 
         // HASH PASSWORD:

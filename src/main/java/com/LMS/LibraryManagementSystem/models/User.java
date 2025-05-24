@@ -2,9 +2,6 @@ package com.LMS.LibraryManagementSystem.models;
 
 import com.LMS.LibraryManagementSystem.enums.Role;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -16,7 +13,7 @@ public class User {
     private String first_name;
     private String last_name;
     private String email;
-    private long phone_number;
+    private long phoneNumber;
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -28,7 +25,7 @@ public class User {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email = email;
-        this.phone_number = phone_number;
+        this.phoneNumber = phone_number;
         this.password = password;
         this.role = role;
     }
@@ -38,7 +35,7 @@ public class User {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email = email;
-        this.phone_number = phone_number;
+        this.phoneNumber = phone_number;
         this.password = password;
         this.role = role;
     }
@@ -51,12 +48,12 @@ public class User {
 
 
 
-    public long getPhone_number() {
-        return phone_number;
+    public long getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone_number(long phone_number) {
-        this.phone_number = phone_number;
+    public void setPhoneNumber(long phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public int getUser_id() {
