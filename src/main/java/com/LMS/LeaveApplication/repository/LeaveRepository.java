@@ -13,7 +13,8 @@ public interface LeaveRepository extends CrudRepository<Leave, Integer> {
     List<Leave> findByEmployee(User employee);
     List<Leave> findByLeaveStatus(LeaveStatus leaveStatus);
 
-    /* this returns all employees who have approved leaves
+    /*
+    * this returns all employees who have approved leaves
     * and start date is more than current date
     * and end date is less than current date
     */
