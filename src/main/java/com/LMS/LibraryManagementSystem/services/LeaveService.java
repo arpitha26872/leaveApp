@@ -43,5 +43,23 @@ public class LeaveService {
     public List<Leave> getLeaveByStatus(LeaveStatus leaveStatus) {
         return leaveRepository.findByLeaveStatus(leaveStatus);
     }
+
+    public Leave changeLeaveStatus(int leaveId, int userId, LeaveStatus leaveStatus) {
+        User manager = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Manager not found"));
+        Leave leave = leaveRepository.findById(leaveId)
+                .orElseThrow(() -> new RuntimeException("Leave request not found"));
+        leave.setLeaveStatus(leaveStatus);
+        leave.setManager(manager);
+        return leaveRepository.save(leave);
+    }
+
+    public List<Leave> getApprovedLeaves() {
+        return leaveRepository.findByLeaveStatus(LeaveStatus.APPROVED);
+    }
+
+    public List<Leave> getRejectedLeaves() {
+        return leaveRepository.findByLeaveStatus(LeaveStatus.REJECTED);
+    }
 }
 

@@ -1,10 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>rejectedRequests</title>
+    <meta charset="UTF-8" />
+    <title>Rejected Leave Requests</title>
+    <style>
+        body      { font-family: Arial, sans-serif; margin: 2rem; background: #f9f9f9; }
+        h2        { color: #a12a2a; }
+        table     { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td    { border: 1px solid #ddd; padding: 0.6rem; }
+        th        { background: #f8d7da; }
+    </style>
 </head>
 <body>
+
+<h2>Rejected Leave Requests</h2>
+
+<table id="rejectedTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Employee</th>
+        <th>Reason</th>
+        <th>Start</th>
+        <th>End</th>
+    </tr>
+    </thead>
+    <tbody><!-- rows will be injected here --></tbody>
+</table>
+
+<p id="msg" style="font-weight:bold;"></p>
+
+<script>
+    const apiBase = 'http://localhost:8081'; // Adjust if needed
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+        alert('Please login');
+        window.location.href = '/';
+    }
+
+    async function loadRejected() {
+        try {
+            const res = await fetch(`${apiBase}/admin/rejectedLeaves`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error(await res.text());
+
+            const leaves = await res.json();
+            const tbody = document.querySelector('#rejectedTable tbody');
+            tbody.innerHTML = '';
+
+            leaves.forEach(l => {
+                const empName = l.employee?.first_name ? `${l.employee.first_name} ${l.employee.last_name}` : 'N/A';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${l.leave_id}</td>
+                    <td>${empName}</td>
+                    <td>${l.leaveReason}</td>
+                    <td>${l.leaveStartDate}</td>
+                    <td>${l.leaveEndDate}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (err) {
+            const msg = document.getElementById('msg');
+            msg.textContent = 'Error loading rejected leaves: ' + err.message;
+            msg.style.color = 'red';
+        }
+    }
+
+    loadRejected();
+</script>
 
 </body>
 </html>
