@@ -2,11 +2,23 @@ package com.LMS.LibraryManagementSystem.dto.responses;
 
 
 import com.LMS.LibraryManagementSystem.services.auth.MyCustomUserDetails;
+import jakarta.persistence.GeneratedValue;
+import org.springframework.security.core.GrantedAuthority;
 
 public class AuthResponse {
 
     private MyCustomUserDetails myCustomUserDetails;
     private String token;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    private String role;
 
     public AuthResponse(){
 
@@ -16,6 +28,10 @@ public class AuthResponse {
     public AuthResponse(String token, MyCustomUserDetails myCustomUserDetails){
         this.token = token;
         this.myCustomUserDetails = myCustomUserDetails;
+        this.role = myCustomUserDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("UNKNOWN");
     }
 
     public int getUserId(){

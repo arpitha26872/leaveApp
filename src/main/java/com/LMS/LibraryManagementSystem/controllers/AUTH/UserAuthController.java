@@ -64,11 +64,10 @@ public class UserAuthController {
         String token = jwtTokenService.generateToken(userDetails);
         // Generates a JWT token for the authenticated user using their details.
 
+
         // SET RESPONSE:
         AuthResponse response = new AuthResponse(token, userDetails);
         // Constructs a response object containing the token and user details.
-
-        System.out.println(token);
 
         // RETURN RESPONSE:
         return new ResponseEntity(response, HttpStatus.ACCEPTED);

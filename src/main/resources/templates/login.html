@@ -26,14 +26,6 @@
             color: red;
             display: none;
         }
-        #dashboardContent {
-            white-space: pre-wrap;
-            margin-top: 2rem;
-            max-width: 600px;
-            border: 1px solid #ccc;
-            padding: 1rem;
-            background: #f9f9f9;
-        }
     </style>
 </head>
 <body>
@@ -47,19 +39,21 @@
     <p id="err"></p>
 </form>
 
-<div id="dashboardContent" style="display:none"></div>
-
 <script>
+    // Redirect if token already exists
+    const token = localStorage.getItem('jwt');
+    if (token) {
+        // Optionally, verify token validity here before redirecting
+        window.location.href = '/pages/dashboard';
+    }
+
     const form = document.getElementById('loginForm');
     const errElem = document.getElementById('err');
-    const dashboardDiv = document.getElementById('dashboardContent');
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         errElem.style.display = 'none';
-        dashboardDiv.style.display = 'none';
-        dashboardDiv.textContent = '';
 
         const payload = {
             email: document.getElementById('email').value,
@@ -83,28 +77,8 @@
             const { token } = await res.json();
             localStorage.setItem('jwt', token);
 
-            // Now fetch dashboard content with Authorization header
-            const dashRes = await fetch('/user/dashboard', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!dashRes.ok) {
-                const msg = await dashRes.text();
-                showError(msg || `Dashboard error ${dashRes.status}`);
-                return;
-            }
-
-            // Assuming your backend returns HTML for dashboard
-            const dashHtml = await dashRes.text();
-
-            // Hide login form and show dashboard content
-            form.style.display = 'none';
-            dashboardDiv.style.display = 'block';
-            dashboardDiv.innerHTML = dashHtml;
+            // Redirect directly to dashboard page (instead of fetching HTML here)
+            window.location.href = '/pages/dashboard';
 
         } catch (err) {
             showError('Network error – please try again');
@@ -119,4 +93,6 @@
 
 </body>
 </html>
+
+
 

@@ -6,18 +6,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("")
+@RequestMapping("pages")
 public class PageController {
 
     /** Renders templates/login.html */
-    @GetMapping("auth/login")
-    public String loginView() {            // no Model needed
-        return "login";                    // -> src/main/resources/templates/login.html
+    @GetMapping("login")
+    public String loginView() {
+        return "login";
     }
 
     /** Landing page after successful login (optional) */
-    @GetMapping("user/dashboard")
+    @GetMapping("dashboard")
     public String dashboard() {
         return "dashboard";
+    }
+
+    @GetMapping("adminDashboard")
+    public String adminDashboard() {
+        return "adminDashboard";
     }
 }
