@@ -1,10 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>dashboard</title>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 2rem;
+          background: #f9f9f9;
+        }
+        h2 {
+          color: #333;
+        }
+        .dashboard-container {
+          display: flex;
+          gap: 2rem;
+        }
+        .section {
+          background: white;
+          border: 1px solid #ddd;
+          padding: 1rem 1.5rem;
+          border-radius: 6px;
+          box-shadow: 0 0 5px rgba(0,0,0,0.1);
+          flex: 1;
+        }
+        .section h3 {
+          margin-top: 0;
+          color: #555;
+          border-bottom: 1px solid #eee;
+          padding-bottom: 0.5rem;
+        }
+        button {
+          margin-top: 1rem;
+          padding: 0.5rem 1rem;
+          font-size: 1rem;
+          cursor: pointer;
+          border: none;
+          border-radius: 4px;
+          background: #007bff;
+          color: white;
+        }
+        button:hover {
+          background: #0056b3;
+        }
+        /* Optional: style a simple table for current leave requests */
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 1rem;
+        }
+        th, td {
+          border: 1px solid #ddd;
+          padding: 0.5rem;
+          text-align: left;
+        }
+        th {
+          background-color: #f4f4f4;
+        }
+    </style>
 </head>
 <body>
 
+<h2>User Dashboard</h2>
+
+<div class="dashboard-container">
+
+    <div class="section" id="current-leave-requests">
+        <h3>Current Leave Requests</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Leave Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Annual Leave</td>
+                <td>2025-06-01</td>
+                <td>2025-06-05</td>
+                <td>Approved</td>
+            </tr>
+            <tr>
+                <td>Sick Leave</td>
+                <td>2025-07-10</td>
+                <td>2025-07-12</td>
+                <td>Pending</td>
+            </tr>
+            <!-- Add more leave requests dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section" id="make-leave-request">
+        <h3>Make Leave Request</h3>
+        <form id="leaveRequestForm">
+            <label for="leaveType">Leave Type:</label><br />
+            <select id="leaveType" name="leaveType" required>
+                <option value="">Select Leave Type</option>
+                <option value="annual">Annual Leave</option>
+                <option value="sick">Sick Leave</option>
+                <option value="casual">Casual Leave</option>
+            </select><br /><br />
+
+            <label for="startDate">Start Date:</label><br />
+            <input type="date" id="startDate" name="startDate" required /><br /><br />
+
+            <label for="endDate">End Date:</label><br />
+            <input type="date" id="endDate" name="endDate" required /><br /><br />
+
+            <button type="submit">Submit Request</button>
+        </form>
+
+        <p id="requestMessage" style="color: green; display: none;"></p>
+    </div>
+
+</div>
+
+<script>
+    document.getElementById('leaveRequestForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const leaveType = document.getElementById('leaveType').value;
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+
+      if (!leaveType || !startDate || !endDate) {
+        alert('Please fill all fields.');
+        return;
+      }
+
+      // Here, you would send the leave request to your backend
+      // For now, we just simulate success:
+
+      document.getElementById('requestMessage').textContent = 'Leave request submitted successfully!';
+      document.getElementById('requestMessage').style.display = 'block';
+
+      // Reset form
+      this.reset();
+    });
+</script>
+
 </body>
 </html>
+
+
+

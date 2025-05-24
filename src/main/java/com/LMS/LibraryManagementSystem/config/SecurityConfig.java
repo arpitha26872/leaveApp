@@ -40,9 +40,10 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/api/v1/admin/auth/**").hasAuthority(Role.ADMIN.toString())
-                .requestMatchers("api/v1/test/user").hasAuthority(Role.EMPLOYEE.toString())
-                .requestMatchers("api/v1/test/admin").hasAuthority(Role.ADMIN.toString())
+                .requestMatchers("/user/**").hasAnyAuthority(Role.ADMIN.toString(), Role.EMPLOYEE.toString())
+                .requestMatchers("admin/auth/**").hasAuthority(Role.ADMIN.toString())
+                .requestMatchers("test/user").hasAuthority(Role.EMPLOYEE.toString())
+                .requestMatchers("test/admin").hasAuthority(Role.ADMIN.toString())
                 // Publicly accessible endpoints for authentication and general information.
 
                 .anyRequest().authenticated()
