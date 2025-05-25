@@ -38,12 +38,9 @@ public class SecurityConfig {
                 // Disables CSRF protection (not required for JWT-based stateless authentication).
 
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/pages/**").permitAll()
+                .requestMatchers("/auth/**","/pages/**","/").permitAll()
                 .requestMatchers("/user/**").hasAnyAuthority(Role.ADMIN.toString(), Role.EMPLOYEE.toString())
-                .requestMatchers("admin/**").hasAuthority(Role.ADMIN.toString())
-                .requestMatchers("test/user").hasAuthority(Role.EMPLOYEE.toString())
-                .requestMatchers("test/admin").hasAuthority(Role.ADMIN.toString())
+                .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.toString())
                 // Publicly accessible endpoints for authentication and general information.
 
                 .anyRequest().authenticated()

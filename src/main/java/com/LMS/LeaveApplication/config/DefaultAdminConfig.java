@@ -24,7 +24,7 @@ public class DefaultAdminConfig {
             // Check if the admin already exists
             if (!userRepository.existsByEmail("admin@gmail.com")) {
                 // Create the default admin user
-                User admin = new User( // Example unique ID, you can adjust it as per your logic.
+                User admin = new User( // A default user
                         "admin",
                         "admin",
                         "admin@gmail.com",

@@ -20,21 +20,25 @@ public class LeaveService {
     private UserRepository userRepository;
 
     public Leave addLeaveRequest(int employeeId, String reason, String startDate, String endDate) {
+        //get the employee detail , if not found then a runtime exception will be thrown
         User employee = userRepository.findById(employeeId)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 
+        // create object of Leave class
         Leave leave = new Leave();
         leave.setEmployee(employee);
         leave.setManager(null);
         leave.setLeaveReason(reason);
         leave.setLeaveStartDate(startDate);
         leave.setLeaveEndDate(endDate);
+        // default leave status as pending
         leave.setLeaveStatus(LeaveStatus.PENDING);
 
-        return leaveRepository.save(leave);  // ←🔥 This is where the leave is added (inserted)
+        return leaveRepository.save(leave);
     }
 
     public List<Leave>  getEmployeeLeaves(int employeeId) {
+        //get the employee detail , if not found then a runtime exception will be thrown
         User employee = userRepository.findById(employeeId)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
         return leaveRepository.findByEmployee(employee);
@@ -45,8 +49,10 @@ public class LeaveService {
     }
 
     public Leave changeLeaveStatus(int leaveId, int userId, LeaveStatus leaveStatus) {
+        //get the employee detail , if not found then a runtime exception will be thrown
         User manager = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Manager not found"));
+        //get the employee detail , if not found then a runtime exception will be thrown
         Leave leave = leaveRepository.findById(leaveId)
                 .orElseThrow(() -> new RuntimeException("Leave request not found"));
         leave.setLeaveStatus(leaveStatus);
@@ -55,14 +61,17 @@ public class LeaveService {
     }
 
     public List<Leave> getApprovedLeaves() {
+        //changing the leave status to approve
         return leaveRepository.findByLeaveStatus(LeaveStatus.APPROVED);
     }
 
     public List<Leave> getRejectedLeaves() {
+        //changing the leave status to rejected
         return leaveRepository.findByLeaveStatus(LeaveStatus.REJECTED);
     }
 
     public List<Leave> getEmployeeOnLeave() {
+        //getting the employees currently on leave
         return leaveRepository.findEmployeesOnLeave();
     }
 }

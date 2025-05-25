@@ -25,6 +25,7 @@ public class Leave {
     private LocalDate leaveEndDate;
     private LeaveStatus leaveStatus;
 
+    /** Constructors **/
     public Leave() {
     }
 
@@ -38,6 +39,7 @@ public class Leave {
         this.leaveStatus = leave_status;
     }
 
+    /** Getters and Setters **/
     public int getLeave_id() {
         return leave_id;
     }

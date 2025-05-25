@@ -35,19 +35,6 @@ public class UserService {
     // END OF LOAD USER BY EMAIL.
 
     /**
-     * Method to check if an email already exists in the database.
-     *
-     * @param email The email to check.
-     * @return A list of strings representing users with the given email.
-     * If the list is empty, the email does not exist.
-     */
-    public List<String> doesEmailExist(String email) {
-        return userRepository.doesEmailExist(email);
-        // Calls the repository method `doesEmailExist` to check for duplicates.
-    }
-    // END OF CHECK IF EMAIL EXISTS SERVICE METHOD.
-
-    /**
      * Method to register a new user in the database.
      *
      * @param first_name The first name of the user.

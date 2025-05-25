@@ -19,6 +19,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role = Role.EMPLOYEE; // Default role set to USER
 
+    /** constructors **/
+
     public User() {}
 
     public User(String first_name, String last_name, String email, long phone_number, String password, Role role) {
@@ -40,13 +42,7 @@ public class User {
         this.role = role;
     }
 
-    /**
-     * ---------------------------------------
-     *  GETTERS AND SETTERS:
-     * -------------------------------------
-     * */
-
-
+    /** Getters and Setters **/
 
     public long getPhoneNumber() {
         return phoneNumber;
